@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.BrandMapper">
+
+    <sql id="brand_column">
+        id,brand_name as brandName,company_name as companyName,ordered,description,status
+    </sql>
+
+    <select id="selectAll" resultType="Brand">
+        select
+          <include refid="brand_column"></include>
+        from Brand;
+    </select>
+
+<!--       //参数占位符
+          1、#{}:会将其替换为？为了防止SQL注入
+          2、${}：拼写SQL会存在SQL注入问题
+           *参数传递的时候：#{};
+           *${}表明或者列名不固定的时候使用，会存在SQL注入问题
+
+-->
+
+<!--      //特殊符号处理
+         1、转义字符；
+         2、CDATA区；<字符在XML中不能表示
+          <select id="selectById" resultType="brand">
+        select
+        <include refid="brand_column"></include>
+        from Brand where id<![CDATA[
+           <
+        ]]> #{id};
+    </select>
+
+-->
+    <select id="selectById" resultType="brand">
+        select
+        <include refid="brand_column"></include>
+        from Brand where id =#{id};
+    </select>
+
+    <select id="selectByCondition" resultType="brand">
+        select
+        <include refid="brand_column"></include>
+        from Brand
+        where
+               status =#{status}
+                and company_name like #{companyName}
+               and brand_name like #{brandName}
+<!--        <where>-->
+<!--            <if test=""> -->
+<!--                 status =#{id}-->
+<!--            </if>-->
+
+<!--            <if test="">-->
+<!--                and company_name like #{companyName}-->
+<!--            </if>-->
+<!--            <if test="">-->
+<!--               -->
+<!--                and brand_name like #{brandName}-->
+<!--            </if>-->
+<!--        </where>-->
+
+    </select>
+</mapper>
